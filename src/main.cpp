@@ -1,70 +1,132 @@
+#include <ios>
 #include <iostream>
 #include "../include/Task.hpp"
 #include "../include/TaskManager.hpp"
+#include <limits>
 
 int main(){
-    /*Task task{
-        .id = 1,
-        .description = "Learn c++20 designated initializers",
-        .priority = Priority :: Medium,
-        .is_completed = false 
+
+    const std :: string filename = "tasks.csv";
+    TaskManager manager;
+
+    if (!manager.load_from_file(filename)){
+        std :: cout << "No previous data found. Starting with a fresh task list.\n";
+    }
+    else{
+        std :: cout << "Successfullu loaded existing tasks from " << filename << ".\n";
+    }
+
+    bool running = true;
     
-    };
+    while(running){
+        std::cout << "\n--- Task Manager ---\n"
+                  << "1. List Tasks\n"
+                  << "2. Add Task\n"
+                  << "3. Mark Task Complete\n"
+                  << "4. Delete Task\n"
+                  << "5. Sort by Priority\n"
+                  << "6. Sort by Status\n"
+                  << "7. Clear all Tasks \n"
+                  << "8. Save & Exit\n"
+                  << "Choose an option: ";
+        
+        int choice{0};
+        if (!(std::cin >> choice)){
+            //handling non-numeric input
+            std::cout << "Invalid input. Please enter a number from the menu.\n";
+            std::cin.clear();
+            std :: cin.ignore(std ::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+        switch (choice) {
+            case 1 : 
+                manager.list_tasks();    
+                break;
+            case 2:{
+                std :: string description,priority;
+                std :: cout << "Enter description of the task you wish to add: \n";
+                std :: getline(std::cin,description);
+                std :: cout << "\nEnter the priority of the task: \n";
+                std :: getline(std::cin,priority);
+                manager.add_task(description,string_to_priority(priority));
+                break;
+            }
+            case 3:{
+                int id;
+                std :: cout << "Enter the ID of the task: ";
+                if (!(std::cin>>id)){
+                    std::cout << "Invalid input. Please enter a valid ID.\n";
+                    std ::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    continue;
+                }
+                if(manager.mark_completed(id)){
+                    std::cout << "Task #" << id << " marked as complete.\n";
+                }
+                else{
+                    std::cout << "Task #" << id << " not found.\n";
+                }
+                break;
+            }
+            case 4:{
+                int id;
+                std :: cout << "Enter the ID of the task you wish to delete: ";
+                if (!(std::cin >> id)){
+                    std::cout << "Invalid input. Please enter a valid ID. \n";
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+                    continue;
+                }
+                if(manager.remove_task(id)){
+                    std::cout << "Task #" << id << " removed.\n";
+                }
+                else{
+                    std::cout << "Task #" << id << " not found.\n";
+                }
+                break;
+            }
+            case 5:
+                manager.sort_by_priority();
+                std::cout << "Tasks sorted by priority.\n";
+                break;
+            case 6:
+                manager.sort_by_status();
+                std::cout << "Tasks sorted by status.\n";
+                break;
+            case 7:{
+                char confirm{'n'};
+                std :: cout << "Are you sure you want to clear all tasks (y/n): ";
+                std::cin >> confirm;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 
+                if (confirm == 'y'){
+                    manager.clear_all();
+                    std::cout << "All tasks have been cleared. \n";
+                }
+                else{
+                    std::cout << "Action cancelled.\n";
+                }
+                break;
+            }
 
-std::cout << "Task #" << task.id << ": " << task.description << '\n';
-std::cout << "Priority: " << priority_to_string(task.priority) << '\n';
-std::cout << "Done : " << (task.is_completed ? "Yes" : "No") << '\n';
-*/
- /*   TaskManager manager;
-
-    manager.add_task("Finish Step 2 of CLI project", Priority::High);
-    manager.add_task("Go to the gym", Priority :: High);
-    manager.add_task("Read a book", Priority :: Medium);
-
-    std::cout << "Initial list:";
-    manager.list_tasks();
-
-    std::cout << "\nMarking task #1 complete ...\n";
-    manager.mark_completed(1);
-
-    std::cout << "\nRemoving task #2 ...\n";
-
-    std::cout <<"\nUpdated list:";
-    manager.list_tasks();
-
-    return 0;
-    */
-    const std::string filename = "tasks.csv";
-    {
-        TaskManager manager;
-        manager.add_task("Finish the project",Priority :: High);
-        manager.add_task("Drink protein", Priority :: Low);
-        manager.mark_completed(1);
-
-        std :: cout << " --- Original Tasks (Before Saving) ---";
-        manager.list_tasks();
-
-        if (manager.save_to_file(filename)){
-            std :: cout << "Successfully saved to " << filename << "\n";
+            case 8:
+                manager.save_to_file(filename);
+                running = false; //exiting the loop
+                break;
+            default:
+                std :: cout << "Invalid choice. Please select 1-7\n";
+                break; //back to the menu
         }
     }
-
-    {
-        TaskManager loaded_manager;
-        if (loaded_manager.load_from_file(filename)){
-            std :: cout << "\n --- Loaded Tasks (From File) ---";
-            loaded_manager.list_tasks();
-
-        }
-
-        loaded_manager.add_task("New task after reload ", Priority :: Medium);
-        std :: cout << "\n --- After Adding New Task (Check ID #3) ---";
-        loaded_manager.list_tasks();
-    }
     return 0;
+}
 
-}; 
 
+
+
+
+
+ 
 
 

@@ -17,6 +17,14 @@ class TaskManager{
         bool mark_completed(std::size_t id);
         bool remove_task(std :: size_t id);
 
+        //file I/O with CSV 
         bool save_to_file(const std:: string& filename)const;
         bool load_from_file(const std:: string& filename);
+
+        //sorting (standard algorithms)
+        void sort_by_priority();
+        void sort_by_status();
+
+        //clears all saved tasks.
+        void clear_all();
 };

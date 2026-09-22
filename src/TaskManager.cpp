@@ -26,10 +26,12 @@ void TaskManager :: list_tasks() const {
     }
     std::cout << "\n--- Task List ---\n";
     for (const auto& task : tasks ){
-        std :: cout << "~Task ID:" << task.id << "\n";
-        std :: cout <<"~Task description: " << task.description << "\n";
-        std :: cout <<"~Task Priority: " << priority_to_string(task.priority) << "\n";
-        std :: cout <<"~Task completed: " <<( task.is_completed ? "[X]" : "[ ]") << "\n";
+        std ::cout  << "============================================\n";
+        std :: cout << "Task ID:" << task.id << "\n";
+        std :: cout <<"Task description: " << task.description << "\n";
+        std :: cout <<"Task Priority: " << priority_to_string(task.priority) << "\n";
+        std :: cout <<"Task completed: " <<( task.is_completed ? "[X]" : "[ ]") << "\n";
+        std :: cout <<"============================================\n";
     }
     std :: cout << "----------------------------\n";
 
@@ -104,4 +106,21 @@ bool TaskManager :: load_from_file(const std::string &filename){
     }
     next_id = max_id + 1;
     return true;
+}
+
+void TaskManager :: sort_by_priority(){
+    std :: sort (tasks.begin(),tasks.end(),[](const Task& a,const Task& b){
+            return static_cast<int>(a.priority) > static_cast<int>(b.priority);
+    });
+}
+
+void TaskManager :: sort_by_status(){
+    std :: sort (tasks.begin(),tasks.end(),[](const Task& a,const Task& b) {
+        return a.is_completed < b.is_completed;
+    });
+}
+
+void TaskManager :: clear_all(){
+    tasks.clear();
+    next_id = 1;
 }
