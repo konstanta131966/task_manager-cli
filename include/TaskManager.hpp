@@ -16,4 +16,7 @@ class TaskManager{
 
         bool mark_completed(std::size_t id);
         bool remove_task(std :: size_t id);
+
+        bool save_to_file(const std:: string& filename)const;
+        bool load_from_file(const std:: string& filename);
 };

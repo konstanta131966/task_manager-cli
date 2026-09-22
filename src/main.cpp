@@ -16,7 +16,7 @@ std::cout << "Task #" << task.id << ": " << task.description << '\n';
 std::cout << "Priority: " << priority_to_string(task.priority) << '\n';
 std::cout << "Done : " << (task.is_completed ? "Yes" : "No") << '\n';
 */
-    TaskManager manager;
+ /*   TaskManager manager;
 
     manager.add_task("Finish Step 2 of CLI project", Priority::High);
     manager.add_task("Go to the gym", Priority :: High);
@@ -34,4 +34,37 @@ std::cout << "Done : " << (task.is_completed ? "Yes" : "No") << '\n';
     manager.list_tasks();
 
     return 0;
-};
+    */
+    const std::string filename = "tasks.csv";
+    {
+        TaskManager manager;
+        manager.add_task("Finish the project",Priority :: High);
+        manager.add_task("Drink protein", Priority :: Low);
+        manager.mark_completed(1);
+
+        std :: cout << " --- Original Tasks (Before Saving) ---";
+        manager.list_tasks();
+
+        if (manager.save_to_file(filename)){
+            std :: cout << "Successfully saved to " << filename << "\n";
+        }
+    }
+
+    {
+        TaskManager loaded_manager;
+        if (loaded_manager.load_from_file(filename)){
+            std :: cout << "\n --- Loaded Tasks (From File) ---";
+            loaded_manager.list_tasks();
+
+        }
+
+        loaded_manager.add_task("New task after reload ", Priority :: Medium);
+        std :: cout << "\n --- After Adding New Task (Check ID #3) ---";
+        loaded_manager.list_tasks();
+    }
+    return 0;
+
+}; 
+
+
+
