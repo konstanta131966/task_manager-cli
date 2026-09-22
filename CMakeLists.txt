@@ -3,7 +3,8 @@ project(TaskManager VERSION 1.0 LANGUAGES CXX)
 
 add_executable(task_manager
     src/main.cpp
-    src/Task.cpp    
+    src/Task.cpp   
+    src/TaskManager.cpp 
 )
 
 target_compile_features(task_manager PRIVATE cxx_std_20)
