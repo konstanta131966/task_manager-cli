@@ -27,4 +27,6 @@ class TaskManager{
 
         //clears all saved tasks.
         void clear_all();
+        //getter (for testing)
+        const std::vector<Task>& get_tasks() const { return tasks;}
 };

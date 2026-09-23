@@ -3,7 +3,7 @@ project(TaskManager VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #1. Core Logic Library
 add_library(task_manager_core
     src/Task.cpp
@@ -32,6 +32,7 @@ target_link_libraries(task_tests PRIVATE task_manager_core Catch2::Catch2WithMai
 
 #Register with CTest
 add_test(NAME AllTests COMMAND task_tests)
+
 
 
 
