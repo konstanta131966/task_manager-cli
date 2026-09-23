@@ -8,6 +8,8 @@
 #include <cstddef>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
+
 
 
 void TaskManager:: add_task(std::string description,Priority priority){
@@ -19,23 +21,57 @@ void TaskManager:: add_task(std::string description,Priority priority){
     });
 }
 
+//Helper namespace (we are using ANSI esc codes for terminal colors)
+namespace Color {
+    constexpr const char* Reset  = "\033[0m";
+    constexpr const char* Red    = "\033[31m";
+    constexpr const char* Yellow = "\033[33m";
+    constexpr const char* Green  = "\033[32m";
+    constexpr const char* Gray   = "\033[90m"; 
+}
+//helper function
+const char* priority_color(Priority p){
+    switch (p) {
+        case Priority :: High :
+            return Color :: Red;
+        case Priority :: Medium:
+            return Color :: Yellow;
+        case Priority :: Low:
+            return Color :: Gray;
+    }
+    return Color :: Reset;
+}
+
+
+
+
 void TaskManager :: list_tasks() const {
     if (tasks.empty()){
         std::cout << "No tasks found. \n";
         return;
     }
-    std::cout << "\n--- Task List ---\n";
-    for (const auto& task : tasks ){
-        std ::cout  << "============================================\n";
-        std :: cout << "Task ID:" << task.id << "\n";
-        std :: cout <<"Task description: " << task.description << "\n";
-        std :: cout <<"Task Priority: " << priority_to_string(task.priority) << "\n";
-        std :: cout <<"Task completed: " <<( task.is_completed ? "[X]" : "[ ]") << "\n";
-        std :: cout <<"============================================\n";
+    const std::string separator = "+-----+-----+-----+-----+-----+-----+-----+------+-----+-----+-----+------+";
+    std :: cout << "\n" << separator << "\n";
+    
+    std :: cout << "| " << std :: left << std :: setw(4) << "ID"
+                << " | " << std :: left << std :: setw(8) << "Status"
+                << " | " << std :: left << std :: setw(12) << "Priority"
+                << " | " << std :: left << std :: setw(32) << "Description"
+                << " |\n";
+    std :: cout << separator << "\n";
+
+    for (const auto& task : tasks){
+        std :: string status = task.is_completed ? "[X] Done" : "[] To do";
+        std :: string priority_str = priority_to_string(task.priority);
+
+        std :: cout << "| " << std :: left << std :: setw(4) << task.id
+                    << " | " << std :: left << std :: setw(8) << status
+                    << " | " << priority_color(task.priority) << std :: left << std :: setw(12) << priority_str
+                    << Color :: Reset
+                    << " | " << std :: left << std :: setw(32) << task.description
+                    << " |\n";
     }
-    std :: cout << "----------------------------\n";
-
-
+    std :: cout << separator << "\n\n";
 }
 
 bool TaskManager :: mark_completed(std::size_t id){

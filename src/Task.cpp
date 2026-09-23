@@ -1,4 +1,7 @@
 #include "../include/Task.hpp" 
+#include <cctype>
+#include <string>
+#include <algorithm>
 
 std:: string priority_to_string(Priority priority){
     switch (priority) {
@@ -11,15 +14,20 @@ std:: string priority_to_string(Priority priority){
     }return "Unknown";
 };
 
-Priority string_to_priority(std::string_view str){
-    if (str == "Low")
-        return Priority :: Low;
-    
-    if (str == "Medium")
-        return Priority :: Medium;
-    
-    if (str == "High")
-        return Priority :: High;
+//internal helper
+std :: string to_upper(std::string str){
+    std :: transform(str.begin(),str.end(),str.begin(),[](unsigned char c){
+        return static_cast<char>(std :: toupper(c));
+    });
+    return str;
+}
 
-    return Priority :: Low; //temporary will change to uncategorized or something like that
+Priority string_to_priority(std::string_view str){
+   std :: string upper_str = to_upper(std::string {str});
+   
+   if (upper_str == "HIGH") return Priority::High;
+   if (upper_str == "MEDIUM") return Priority :: Medium;
+   return Priority :: Low; //default fallback
 };
+
+
