@@ -33,7 +33,12 @@ target_link_libraries(task_tests PRIVATE task_manager_core Catch2::Catch2WithMai
 #Register with CTest
 add_test(NAME AllTests COMMAND task_tests)
 
+# Installation rules
+include(GNUInstallDirs)
 
+install(TARGETS task_manager
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
 
 
 

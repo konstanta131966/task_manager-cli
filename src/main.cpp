@@ -3,10 +3,23 @@
 #include "../include/Task.hpp"
 #include "../include/TaskManager.hpp"
 #include <limits>
+#include <cstdlib>
+#include <filesystem>
+
+//generating the users home file
+std :: string get_data_filepath(){
+    const char* home = std::getenv("HOME");
+    if (home){
+        return std::string(home) + "/.tasks.csv";
+    }
+    return "tasks.csv"; //fallback
+}
+
+
 
 int main(){
 
-    const std :: string filename = "tasks.csv";
+    const std :: string filename = get_data_filepath();
     TaskManager manager;
 
     if (!manager.load_from_file(filename)){
